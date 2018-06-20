@@ -4,6 +4,7 @@ const rimraf = require('rimraf')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv').config()
 const args = process.argv.slice(2)
+const execSync = require('child_process').execSync
 const User = require('./user.model')
 
 // Mongoose
@@ -23,9 +24,8 @@ const connectMongoDB = () => {
 
 // Functions
 const generateServerKeys = () => {
-  const keys = generateRSAKeys()
-  fs.writeFileSync(`out/private.pem`, keys.private)
-  fs.writeFileSync(`out/public.pem`, keys.public)
+  execSync('openssl genrsa -out out/private.pem 2048')
+  execSync('openssl rsa -in out/private.pem -pubout -out out/public.pem')
   process.exit()
 }
 
